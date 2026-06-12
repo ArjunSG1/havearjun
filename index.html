@@ -1,192 +1,390 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LoveNote - For Vaniaa</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
+
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <!-- GSAP untuk Animasi Canggih -->
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    
+
     <style>
-        body { font-family: 'Poppins', sans-serif; background: #ffe5ec; overflow: hidden; }
-
-        /* 1. CLOUD FOREST BACKGROUND */
-        .sky { position: fixed; inset: 0; z-index: -1; background: radial-gradient(circle, #fff5f7 0%, #ffcad4 100%); }
-        .cloud { position: absolute; background: white; filter: blur(60px); border-radius: 50%; opacity: 0.6; animation: move 25s infinite alternate ease-in-out; }
-        @keyframes move { from { transform: translate(-10%, -10%) scale(1); } to { transform: translate(10%, 10%) scale(1.4); } }
-
-        /* 2. GLASS EFFECT */
-        .glass { background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.7); box-shadow: 0 25px 50px rgba(255, 77, 109, 0.15); }
-
-        /* 3. MODAL / SURAT POP UP */
-        #letterPopUp {
-            display: none;
-            position: fixed;
-            inset: 0;
-            z-index: 1000;
-            background: rgba(255, 182, 193, 0.4);
-            backdrop-filter: blur(15px);
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
         }
 
-        .letter-card {
-            background: white;
-            width: 90%;
-            max-width: 450px;
-            border-radius: 30px;
-            padding: 40px;
-            transform: scale(0.5) translateY(100px);
-            box-shadow: 0 50px 100px rgba(0,0,0,0.1);
-            position: relative;
+        body{
+            font-family:'Poppins',sans-serif;
+            background:#ffe5ec;
+            overflow:hidden;
         }
 
-        /* 4. TOMBOL MAU GLOWING */
-        .btn-mau {
-            background: linear-gradient(45deg, #ff4d6d, #ff85a1);
-            box-shadow: 0 10px 30px rgba(255, 77, 109, 0.4);
-            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        /* Background */
+        .sky{
+            position:fixed;
+            inset:0;
+            z-index:-1;
+            background:radial-gradient(circle,#fff5f7 0%,#ffcad4 100%);
         }
-        .btn-mau:hover { transform: scale(1.1) rotate(-2deg); }
 
-        /* 5. FLOATING OBJECTS */
-        .floater { position: absolute; pointer-events: none; z-index: 10; }
+        .cloud{
+            position:absolute;
+            background:white;
+            filter:blur(60px);
+            border-radius:50%;
+            opacity:.6;
+            animation:move 25s infinite alternate ease-in-out;
+        }
+
+        @keyframes move{
+            from{
+                transform:translate(-10%,-10%) scale(1);
+            }
+            to{
+                transform:translate(10%,10%) scale(1.4);
+            }
+        }
+
+        /* Glass */
+        .glass{
+            background:rgba(255,255,255,.4);
+            backdrop-filter:blur(20px);
+            border:1px solid rgba(255,255,255,.7);
+            box-shadow:0 25px 50px rgba(255,77,109,.15);
+        }
+
+        /* Popup */
+        #letterPopUp{
+            display:none;
+            position:fixed;
+            inset:0;
+            z-index:1000;
+            background:rgba(255,182,193,.4);
+            backdrop-filter:blur(15px);
+            justify-content:center;
+            align-items:center;
+            opacity:0;
+        }
+
+        .letter-card{
+            background:white;
+            width:90%;
+            max-width:450px;
+            border-radius:30px;
+            padding:40px;
+            transform:scale(.5) translateY(100px);
+            box-shadow:0 50px 100px rgba(0,0,0,.1);
+            position:relative;
+        }
+
+        /* Tombol Mau */
+        .btn-mau{
+            background:linear-gradient(45deg,#ff4d6d,#ff85a1);
+            box-shadow:0 10px 30px rgba(255,77,109,.4);
+            transition:.3s;
+        }
+
+        .btn-mau:hover{
+            transform:scale(1.08);
+        }
+
+        /* Tombol Tidak */
+        #noBtn{
+            position:fixed;
+            z-index:999;
+            transition:.2s;
+        }
+
+        /* Floating */
+        .floater{
+            position:absolute;
+            pointer-events:none;
+            z-index:100;
+            font-size:28px;
+        }
     </style>
 </head>
+
 <body class="flex items-center justify-center min-h-screen">
 
     <div class="sky" id="skyBase"></div>
 
-    <!-- NAVBAR -->
+    <!-- Navbar -->
     <nav class="fixed top-6 w-[90%] max-w-4xl glass rounded-full py-3 px-8 flex justify-between items-center z-[100]">
+
         <div class="flex items-center gap-2">
             <span class="text-pink-500 text-2xl">💖</span>
-            <span class="font-bold text-pink-600 font-['Dancing_Script'] text-2xl">LoveNote</span>
+            <span class="font-bold text-pink-600 text-2xl" style="font-family:'Dancing Script',cursive;">
+                LoveNote
+            </span>
         </div>
+
         <div class="hidden md:flex gap-8 text-sm font-semibold text-pink-500">
-            <span class="border-b-2 border-pink-500 cursor-pointer">Beranda</span>
-            <span class="hover:text-pink-700">Kenangan</span>
-            <span class="hover:text-pink-700">Playlist</span>
+            <span class="border-b-2 border-pink-500">Beranda</span>
+            <span>Kenangan</span>
+            <span>Playlist</span>
         </div>
-        <div class="bg-white/80 p-2 rounded-full text-pink-500 shadow-sm">☰</div>
+
+        <div class="bg-white/80 p-2 rounded-full text-pink-500">
+            ☰
+        </div>
+
     </nav>
 
-    <!-- KARTU PERTANYAAN -->
-    <main class="relative z-10 w-full max-w-lg px-4" id="mainCard">
+    <!-- Main -->
+    <main class="relative z-10 w-full max-w-lg px-4">
+
         <div class="glass rounded-[3rem] p-12 text-center">
-            <div class="text-6xl mb-6 animate-bounce">💖</div>
-            <div class="bg-white/50 inline-block px-5 py-1 rounded-full text-xs font-bold text-pink-500 mb-4 uppercase tracking-widest">✨ Special for you ✨</div>
-            <h1 class="font-['Dancing_Script'] text-5xl text-pink-600 font-bold mb-8">Halo Vaniaa...</h1>
-            <p class="text-gray-500 font-medium mb-12">Apakah kamu mau jadi pacar ku?</p>
-            
+
+            <div class="text-6xl mb-6 animate-bounce">
+                💖
+            </div>
+
+            <div class="bg-white/50 inline-block px-5 py-1 rounded-full text-xs font-bold text-pink-500 mb-4 uppercase tracking-widest">
+                ✨ Special for you ✨
+            </div>
+
+            <h1 class="text-5xl text-pink-600 font-bold mb-8"
+                style="font-family:'Dancing Script',cursive;">
+                Halo Vaniaa...
+            </h1>
+
+            <p class="text-gray-500 font-medium mb-12">
+                Apakah kamu mau jadi pacar ku?
+            </p>
+
             <div class="flex gap-4 justify-center">
-                <button onclick="popTheLetter()" class="btn-mau px-12 py-4 rounded-full text-white font-bold text-lg">
+
+                <button onclick="popTheLetter()"
+                    class="btn-mau px-12 py-4 rounded-full text-white font-bold text-lg">
                     ❤️ Mau
                 </button>
-                <button id="noBtn" onmouseover="moveNo()" class="bg-white border-2 border-pink-100 px-10 py-4 rounded-full text-pink-500 font-bold">
+
+                <button id="noBtn"
+                    class="bg-white border-2 border-pink-100 px-10 py-4 rounded-full text-pink-500 font-bold">
                     Tidak 😈
                 </button>
+
             </div>
+
         </div>
+
     </main>
 
-    <!-- SURAT POP UP (MODAL CANGGIH) -->
+    <!-- Popup Surat -->
     <div id="letterPopUp">
+
         <div class="letter-card text-center overflow-hidden">
-            <!-- Dekorasi Bunga di dalam Pop Up -->
-            <div class="absolute -top-10 -right-10 text-8xl opacity-10">🌹</div>
-            <div class="absolute -bottom-10 -left-10 text-8xl opacity-10">🌹</div>
-            
+
+            <div class="absolute -top-10 -right-10 text-8xl opacity-10">
+                🌹
+            </div>
+
+            <div class="absolute -bottom-10 -left-10 text-8xl opacity-10">
+                🌹
+            </div>
+
             <div class="bg-pink-50 inline-block p-4 rounded-full mb-6">
                 <span class="text-4xl">💌</span>
             </div>
-            
-            <h2 class="font-['Dancing_Script'] text-4xl text-pink-600 font-bold mb-2">Surat Jadian</h2>
-            <div class="text-[10px] text-pink-300 font-bold tracking-[0.3em] uppercase mb-6">Terhitung: 12 Juni 2026</div>
-            
-            <div class="text-gray-600 text-sm leading-relaxed space-y-4 px-4">
-                <p>Mulai detik ini, kamu adalah bagian paling berharga dalam hidupku.</p>
-                <p>Terima kasih sudah memilihku. Aku janji akan menjagamu dengan sepenuh hati, menyayangimu tanpa henti, dan membangun bahagia bersama setiap hari.</p>
-                <div class="font-['Dancing_Script'] text-3xl text-pink-500 pt-6">I love you forever ❤️</div>
+
+            <h2 class="text-4xl text-pink-600 font-bold mb-2"
+                style="font-family:'Dancing Script',cursive;">
+                Surat Jadian
+            </h2>
+
+            <div class="text-[10px] text-pink-300 font-bold tracking-[0.3em] uppercase mb-6">
+                Terhitung: 12 Juni 2026
             </div>
 
-            <button onclick="closePopUp()" class="mt-10 text-pink-300 text-xs font-bold uppercase tracking-widest hover:text-pink-500 transition">Klik untuk tutup</button>
+            <div class="text-gray-600 text-sm leading-relaxed space-y-4">
+
+                <p>
+                    Mulai detik ini, kamu adalah bagian paling berharga dalam hidupku.
+                </p>
+
+                <p>
+                    Terima kasih sudah memilihku.
+                    Aku janji akan menjagamu dengan sepenuh hati,
+                    menyayangimu tanpa henti,
+                    dan membangun bahagia bersama setiap hari.
+                </p>
+
+                <div class="text-3xl text-pink-500 pt-6"
+                     style="font-family:'Dancing Script',cursive;">
+                    I Love You Forever ❤️
+                </div>
+
+            </div>
+
+            <button onclick="closePopUp()"
+                class="mt-10 text-pink-300 text-xs font-bold uppercase tracking-widest">
+                Klik Untuk Tutup
+            </button>
+
         </div>
+
     </div>
 
-    <script>
-        // 1. GENERATE BACKGROUND AWAN
-        const sky = document.getElementById('skyBase');
-        for(let i=0; i<15; i++) {
-            const cloud = document.createElement('div');
-            cloud.className = 'cloud';
-            const size = Math.random() * 400 + 200;
-            cloud.style.width = size + 'px';
-            cloud.style.height = size + 'px';
-            cloud.style.top = Math.random() * 100 + '%';
-            cloud.style.left = Math.random() * 100 + '%';
-            cloud.style.animationDelay = (Math.random() * 10) + 's';
-            sky.appendChild(cloud);
+<script>
+
+    // Background Cloud
+    const sky = document.getElementById("skyBase");
+
+    for(let i=0;i<15;i++){
+
+        const cloud = document.createElement("div");
+
+        cloud.className="cloud";
+
+        const size=Math.random()*400+200;
+
+        cloud.style.width=size+"px";
+        cloud.style.height=size+"px";
+
+        cloud.style.top=Math.random()*100+"%";
+        cloud.style.left=Math.random()*100+"%";
+
+        cloud.style.animationDelay=Math.random()*10+"s";
+
+        sky.appendChild(cloud);
+    }
+
+    // Tombol Tidak
+    const noBtn=document.getElementById("noBtn");
+
+    noBtn.style.left="55%";
+    noBtn.style.top="58%";
+
+    function moveNo(){
+
+        const x=Math.random()*
+        (window.innerWidth-noBtn.offsetWidth-20);
+
+        const y=Math.random()*
+        (window.innerHeight-noBtn.offsetHeight-20);
+
+        gsap.to(noBtn,{
+            left:x,
+            top:y,
+            duration:0.15,
+            ease:"power2.out"
+        });
+    }
+
+    // Laptop
+    noBtn.addEventListener("mouseover",moveNo);
+
+    // HP
+    noBtn.addEventListener("touchstart",function(e){
+        e.preventDefault();
+        moveNo();
+    });
+
+    // HP saat jari mendekat
+    document.addEventListener("touchmove",function(e){
+
+        const touch=e.touches[0];
+
+        const rect=noBtn.getBoundingClientRect();
+
+        const centerX=rect.left+rect.width/2;
+        const centerY=rect.top+rect.height/2;
+
+        const distance=Math.sqrt(
+            Math.pow(touch.clientX-centerX,2)+
+            Math.pow(touch.clientY-centerY,2)
+        );
+
+        if(distance<150){
+            moveNo();
         }
+    });
 
-        // 2. TOMBOL TIDAK (LARI)
-        function moveNo() {
-            const btn = document.getElementById('noBtn');
-            const x = Math.random() * (window.innerWidth - btn.clientWidth);
-            const y = Math.random() * (window.innerHeight - btn.clientHeight);
-            gsap.to(btn, { x: x - window.innerWidth/2, y: y - window.innerHeight/2, duration: 0.2 });
-        }
+    // Popup
+    function popTheLetter(){
 
-        // 3. LOGIKA POP UP CANGGIH (GSAP)
-        function popTheLetter() {
-            const modal = document.getElementById('letterPopUp');
-            const letter = modal.querySelector('.letter-card');
-            
-            modal.style.display = 'flex';
-            
-            // Animasi GSAP
-            gsap.to(modal, { opacity: 1, duration: 0.5 });
-            gsap.to(letter, { 
-                scale: 1, 
-                y: 0, 
-                duration: 0.8, 
-                ease: "back.out(1.7)" 
-            });
+        const modal=document.getElementById("letterPopUp");
+        const letter=modal.querySelector(".letter-card");
 
-            createHeartExplosion();
-        }
+        modal.style.display="flex";
 
-        function closePopUp() {
-            const modal = document.getElementById('letterPopUp');
-            gsap.to(modal, { opacity: 0, duration: 0.5, onComplete: () => modal.style.display = 'none' });
-        }
+        gsap.to(modal,{
+            opacity:1,
+            duration:.5
+        });
 
-        // 4. PARTIKEL LEDAKAN HATI
-        function createHeartExplosion() {
-            for(let i=0; i<50; i++) {
-                const h = document.createElement('div');
-                h.className = 'floater';
-                h.innerHTML = ['❤️','💖','💗','🌸'][Math.floor(Math.random()*4)];
-                h.style.left = '50%';
-                h.style.top = '50%';
-                document.body.appendChild(h);
+        gsap.to(letter,{
+            scale:1,
+            y:0,
+            duration:.8,
+            ease:"back.out(1.7)"
+        });
 
-                const angle = Math.random() * Math.PI * 2;
-                const dist = Math.random() * 400 + 100;
+        createHeartExplosion();
+    }
 
-                gsap.to(h, {
-                    x: Math.cos(angle) * dist,
-                    y: Math.sin(angle) * dist,
-                    rotation: Math.random() * 360,
-                    opacity: 0,
-                    duration: Math.random() * 2 + 1,
-                    onComplete: () => h.remove()
-                });
+    function closePopUp(){
+
+        const modal=document.getElementById("letterPopUp");
+
+        gsap.to(modal,{
+            opacity:0,
+            duration:.5,
+            onComplete:()=>{
+                modal.style.display="none";
             }
+        });
+    }
+
+    // Ledakan Hati
+    function createHeartExplosion(){
+
+        for(let i=0;i<60;i++){
+
+            const h=document.createElement("div");
+
+            h.className="floater";
+
+            const icons=[
+                "❤️",
+                "💖",
+                "💗",
+                "💕",
+                "🌸"
+            ];
+
+            h.innerHTML=
+            icons[Math.floor(Math.random()*icons.length)];
+
+            h.style.left="50%";
+            h.style.top="50%";
+
+            document.body.appendChild(h);
+
+            const angle=Math.random()*Math.PI*2;
+            const dist=Math.random()*500+100;
+
+            gsap.to(h,{
+                x:Math.cos(angle)*dist,
+                y:Math.sin(angle)*dist,
+                rotation:Math.random()*720,
+                opacity:0,
+                duration:Math.random()*2+1,
+                onComplete:()=>{
+                    h.remove();
+                }
+            });
         }
-    </script>
+    }
+
+</script>
+
 </body>
 </html>
